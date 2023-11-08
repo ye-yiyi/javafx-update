@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.yeyiyi</groupId>
+    <artifactId>javfx-update</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <!--maven编译的时候默认使用的GBK编码， 通过project.build.sourceEncoding属性设置字符编码，通知maven使用UTF-8编译项目 -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+    </properties>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.3.RELEASE</version>
+    </parent>
+
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.6</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>4.5.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.26</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jfoenix</groupId>
+            <artifactId>jfoenix</artifactId>
+            <scope>system</scope>
+            <version>8.0.4</version>
+            <systemPath>${pom.basedir}/lib/jfoenix-8.0.4.jar</systemPath>
+        </dependency>
+
+
+
+
+    </dependencies>
+
+
+
+    <build>
+
+
+
+         <plugins>
+
+            <plugin>
+
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+            <configuration>
+
+                <layout>ZIP</layout>
+                <!-- 生成真正不包含lib包的jar -->
+                <includes>
+                    <include>
+                        <groupId>non-exists</groupId>
+                        <artifactId>non-exists</artifactId>
+                    </include>
+                </includes>
+                <skip>true</skip>
+            </configuration>
+        </plugin>
+        <!-- maven-jar-plugin、maven-dependency-plugin、maven-resources-plugin 打jar资源分离插件 -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+                <!-- 不打包资源文件（配置文件和依赖包分开） -->
+                <excludes>
+                    <exclude>*.*</exclude>
+                    <exclude>static/**</exclude>
+                    <exclude>templates/**</exclude>
+                </excludes>
+                <archive>
+                    <!-- 配置MANIFEST.MF信息 -->
+                    <manifest>
+                        <!-- 将依赖包添加到Class-Path中，否则找不到任何依赖jar包 -->
+                        <addClasspath>true</addClasspath>
+                        <!-- MANIFEST.MF 中 Class-Path 加入前缀，结合addClasspath为true使用 -->
+                        <!-- 这个关系到加载外部依赖jar包的位置所在 -->
+                        <classpathPrefix>data/game-lib/</classpathPrefix>
+                        <!-- jar包不包含唯一版本标识 -->
+                        <useUniqueVersions>true</useUniqueVersions>
+                        <!--指定入口类：不指定运行出错【xxx.jar中没有主清单属性】 -->
+                        <mainClass>com.yeyiyi.javafx_update.StartApp</mainClass>
+                    </manifest>
+                    <manifestEntries>
+                        <!-- MANIFEST.MF 中 Class-Path 加入资源文件目录 -->
+                        <!-- 这个关系到加载外部资源的位置所在 -->
+<!--                        <Class-Path>res/</Class-Path>-->
+                        <Class-Path>data/game-lib/jfoenix-8.0.4.jar</Class-Path>
+
+                    </manifestEntries>
+                </archive>
+                <outputDirectory>${project.build.directory}</outputDirectory>
+            </configuration>
+        </plugin>
+        <!-- 该插件的作用是用于复制依赖的jar包到指定的文件夹里 -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>copy-dependencies</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>copy-dependencies</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${project.build.directory}/data/game-lib/</outputDirectory>
+                        <excludeTransitive>false</excludeTransitive>
+                        <stripVersion>false</stripVersion>
+                        <includeScope>runtime</includeScope>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        <!-- 该插件的作用是用于复制指定的文件 -->
+        <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>copy-resources</id>
+                    <phase>package</phase>
+                    <goals>
+                        <!-- 复制配置文件 -->
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <resources>
+                            <resource>
+                                <directory>src/main/resources</directory>
+                                <!--<includes>
+                                    <include>*.*</include>
+                                    <include>static/**</include>
+                                    <include>templates/**</include>
+                                </includes>-->
+                            </resource>
+                        </resources>
+                        <outputDirectory>${project.build.directory}/res</outputDirectory>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+
+
+
+
+
+
+<!--        <plugins>-->
+
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--                &lt;!&ndash;下面的代码可以将依赖的第三方jar包通过maven插件打入工程的lib中&ndash;&gt;-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>repackage</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                <configuration>-->
+<!--                    &lt;!&ndash;修改为对应启动的main方法&ndash;&gt;-->
+<!--                    <mainClass>com.yeyiyi.javafx_update.App</mainClass>-->
+<!--                    <includeSystemScope>true</includeSystemScope>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+
+
+
+            <!-- JavaFx Maven Plugin -->
+<!--            <plugin>-->
+<!--                <groupId>com.zenjava</groupId>-->
+<!--                <artifactId>javafx-maven-plugin</artifactId>-->
+<!--                <version>8.8.3</version>-->
+
+<!--                <configuration>-->
+
+<!--                    &lt;!&ndash; 启动类 &ndash;&gt;-->
+<!--                    <mainClass>com.yeyiyi.javafx_update.App</mainClass>-->
+
+<!--                    &lt;!&ndash; 公司名称 &ndash;&gt;-->
+<!--                    <vendor>yeyiyi</vendor>-->
+<!--                    &lt;!&ndash; 应用名称 ${project.build.finalName} = ${project.artifactId}-${project.version} &ndash;&gt;-->
+<!--                    <appName>${project.artifactId}</appName>-->
+<!--                    &lt;!&ndash; 发行版本 &ndash;&gt;-->
+<!--                    <nativeReleaseVersion>${project.version}</nativeReleaseVersion>-->
+
+
+<!--                    &lt;!&ndash;-->
+<!--                        图标设置-->
+
+<!--                        > 参考：https://stackoverflow.com/questions/15880102/how-to-set-custom-icon-for-javafx-native-package-icon-on-windows-->
+
+<!--                        # 方式1（按deployDir、appName配置读取ico文件）-->
+<!--                        # 使用jfx:native打包时，默认会去src/main/deploy/package/windows/${appName}.ico-->
+<!--                        <deployDir>${project.basedir}/src/main/deploy</deployDir>-->
+
+<!--                        # 方式2（固定使用一个图标，与版本号无关）-->
+<!--                        # 优先级高于第一种方式-->
+<!--                        <bundleArguments>-->
+<!--                            <icon>${project.basedir}/src/main/resources/icon/icon.ico</icon>-->
+<!--                        </bundleArguments>-->
+<!--                     &ndash;&gt;-->
+<!--                    <bundleArguments>-->
+<!--                        <icon>${project.basedir}/src/main/resources/icon/icon.ico</icon>-->
+<!--                        &lt;!&ndash;下面这2个参数搭配，可实现一个特别重要的功能，就是，提示用户手动选择程序安装目录，默认目录是在:C:\Program Files (x86)\appName&ndash;&gt;-->
+<!--                        &lt;!&ndash;设置为true将在Program Files中安装应用程序。设置为false将应用程序安装到用户的主目录中。默认值为false。&ndash;&gt;-->
+<!--                        <systemWide>true</systemWide>-->
+<!--                        &lt;!&ndash; 让用户选择安装目标文件夹 &ndash;&gt;-->
+<!--                        <installdirChooser>true</installdirChooser>-->
+<!--                    </bundleArguments>-->
+<!--                    &lt;!&ndash; 桌面图标 &ndash;&gt;-->
+<!--                    <needShortcut>true</needShortcut>-->
+<!--                    &lt;!&ndash; 菜单设置 &ndash;&gt;-->
+<!--                    <needMenu>true</needMenu>-->
+
+<!--                    &lt;!&ndash;添加原生的dll等，因为在打包后，会自带2个java.library.path目录，一个是app目录下，一个是exe所在的目录，只要把dll放到这2个目录的其中一个下，就可以加载dll，可以使用additionalAppResources配置dll目录&ndash;&gt;-->
+<!--                    &lt;!&ndash;成功实现将项目目录下的dll目录下的所有文件复制到了app目录下，app目录也是java.library.path目录，可以直接加载dll&ndash;&gt;-->
+<!--                    <additionalAppResources>${project.basedir}/dll</additionalAppResources>-->
+
+<!--                    &lt;!&ndash;使用这个additionalBundlerResources,不能实现添加dll到app目录&ndash;&gt;-->
+<!--                    &lt;!&ndash;<additionalBundlerResources>&ndash;&gt;-->
+<!--                    &lt;!&ndash;</additionalBundlerResources>&ndash;&gt;-->
+
+<!--                    &lt;!&ndash;排除掉不想要打包进lib依赖库的依赖&ndash;&gt;-->
+<!--                    <classpathExcludes>-->
+<!--                        <classpathExclude>-->
+<!--                            <groupId>org.projectlombok</groupId>-->
+<!--                            <artifactId>lombok</artifactId>-->
+<!--                        </classpathExclude>-->
+
+<!--                    </classpathExcludes>-->
+
+<!--                    &lt;!&ndash;jvmProperties可以添加额外的jvm参数&ndash;&gt;-->
+<!--                    &lt;!&ndash;<jvmProperties>-->
+<!--                    </jvmProperties>&ndash;&gt;-->
+
+<!--                    &lt;!&ndash;默认情况下，这将被设置为'ALL'，根据你安装的操作系统，以下值对于安装者来说是可能的:&ndash;&gt;-->
+<!--                    &lt;!&ndash;windows.app (只创建Windows可执行文件，不生成安装向导的exe)&ndash;&gt;-->
+<!--                    &lt;!&ndash;exe (通过InnoIDE生成exe安装程序)&ndash;&gt;-->
+<!--                    &lt;!&ndash;msi (Microsoft Windows MSI Installer, via WiX)&ndash;&gt;-->
+<!--                    &lt;!&ndash;可以同时添加多个bundler选项，下面是同时生成exe文件夹及exe安装包的&ndash;&gt;-->
+<!--                    &lt;!&ndash;<bundler>windows.app</bundler>&ndash;&gt;-->
+<!--                    <bundler>exe</bundler>-->
+<!--                    &lt;!&ndash;如果构建过程中出现问题，可以打开这个，会显示详细的打包过程信息&ndash;&gt;-->
+<!--                    <verbose>true</verbose>-->
+<!--                    <nativeReleaseVersion>1.0</nativeReleaseVersion>-->
+<!--                    &lt;!&ndash;生成完后，如果打开verbose的话，最后会提示一行，配置文件已保存到....，可以复制路径，打开查看生成的xxx.iss inno 安装脚本&ndash;&gt;-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+
+<!--            <plugin>-->
+<!--                <groupId>io.github.fvarrui</groupId>-->
+<!--                <artifactId>javapackager</artifactId>-->
+<!--                <version>1.6.6</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>package</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            &lt;!&ndash; 启动类 &ndash;&gt;-->
+<!--                            <mainClass>com.yeyiyi.javafx_update.App</mainClass>-->
+<!--&lt;!&ndash;                            <bundleJre>true</bundleJre>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <jrePath>D:\Java\jdk1.8.0_181\jre</jrePath>&ndash;&gt;-->
+<!--                            &lt;!&ndash; 生成安装包 &ndash;&gt;-->
+<!--                            <generateInstaller>true</generateInstaller>-->
+<!--                            &lt;!&ndash; 不使用管理员身份打开程序 &ndash;&gt;-->
+<!--                            <administratorRequired>false</administratorRequired>-->
+<!--                            &lt;!&ndash; 将指定文件夹包含到生成的程序路径 &ndash;&gt;-->
+<!--                            <additionalResources>-->
+<!--                                <additionalResource>E:\guomingyi\test\javafx-x5game\src\main\resources\lib</additionalResource>-->
+<!--                            </additionalResources>-->
+<!--                            &lt;!&ndash; 平台 &ndash;&gt;-->
+<!--                            <platform>windows</platform>-->
+<!--                            <name>x5game自动脚本</name>-->
+<!--                            &lt;!&ndash; exe 名称，通过引用的方式 &ndash;&gt;-->
+<!--                            <displayName>x5game自动脚本</displayName>-->
+<!--                            <version>1.0</version>-->
+<!--                            &lt;!&ndash; 虚拟机参数 &ndash;&gt;-->
+<!--                            <vmArgs>-->
+<!--                                <vmArg>&#45;&#45;add-opens java.base/java.lang=ALL-UNNAMED</vmArg>-->
+<!--                            </vmArgs>-->
+<!--                            &lt;!&ndash; 特定平台参数 &ndash;&gt;-->
+<!--                            <winConfig>-->
+<!--                                &lt;!&ndash; 软件图标 &ndash;&gt;-->
+<!--                                <icoFile>E:\guomingyi\test\javafx-x5game\src\main\resources\icon\logo.ico</icoFile>-->
+<!--                            </winConfig>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+
+
+<!--        </plugins>-->
+    </build>
+</project>
