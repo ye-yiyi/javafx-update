@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+
+<?import javafx.scene.layout.StackPane?>
+
+
+<?import javafx.scene.layout.VBox?>
+
+
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+
+
+<?import com.jfoenix.controls.JFXProgressBar?>
+<?import javafx.scene.control.Separator?>
+<StackPane fx:id="rootPane" styleClass="green-theme"
+           fx:controller="com.yeyiyi.javafx_update.ctrl.MainCtrl"
+           stylesheets="@../css/dark-theme.css"
+           maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefWidth="300" spacing="20" maxWidth="300" alignment="CENTER">
+         <children>
+
+
+            <Text  text="正在检查更新..." textAlignment="CENTER">
+               <font> <Font size="16"/> </font>
+            </Text>
+
+            <JFXProgressBar styleClass="custom-jfx-progress-bar" prefWidth="300"></JFXProgressBar>
+
+
+
+
+            <Separator />
+
+
+            <Text  text="【运行资源更新】" textAlignment="CENTER">
+               <font> <Font size="16"/> </font>
+            </Text>
+
+            <JFXProgressBar fx:id="progress" styleClass="custom-jfx-progress-bar" progress="0" prefWidth="300"></JFXProgressBar>
+
+            <Label fx:id="fileNum"  text="0/0" >
+               <font> <Font size="16"/> </font>
+            </Label>
+
+            <Separator />
+
+
+               <Text  text="【软件更新】" textAlignment="CENTER">
+                  <font> <Font size="16"/> </font>
+               </Text>
+
+               <JFXProgressBar fx:id="progress2" styleClass="custom-jfx-progress-bar" progress="0" prefWidth="300"></JFXProgressBar>
+
+
+
+         </children>
+      </VBox>
+   </children>
+
+</StackPane>
