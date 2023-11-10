@@ -8,7 +8,10 @@
 
 # 运行效果
 
-<video src="./demo.mp4" controls="controls">您的浏览器不支持播放该视频！</video>
+- 项目根目录下的demo.mp4 可查看运行视频示例 以下为图片示例
+
+- ![path](./img_2.png)
+- ![path](./img_3.png)
 
 # 打包教程
 使用精简jar包的方式（依赖包和项目源码分离，目的是为了下载的时候尽量节省流量）
@@ -25,4 +28,4 @@ mvn clean package -Dmaven.test.skip=true
 # 关于作者
 
 一个喜欢学习各种技术的人
-- 我的网站：[记忆长廊](https://www.xiaoyuyu.gaems)  
+- 我的网站：[记忆长廊](https://www.xiaoyuyu.games)  

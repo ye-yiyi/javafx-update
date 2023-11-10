@@ -55,7 +55,7 @@ public class MainCtrl implements Initializable {
                 JSONArray libList = new JSONArray();
                 JSONObject pure = new JSONObject();
                 try {
-                    String url = Data.baseUrl+"getUpdateFile?type="+Data.type;
+                    String url = "填写自己的后端接口URL";
                     String ret = HttpUtil.sendGet(url,10000);
                     if(StringUtils.isNotBlank(ret)){
                         JSONObject data = new JSONObject(ret);
