@@ -126,6 +126,7 @@ public class MainCtrl implements Initializable {
                                     count += numread;
                                     float progressNum = ((float) count / length) ;//当前进度，用来更新progressBar的进度
 
+                                    //可在此处增加页面下载进度显示
                                     // 通知主线程更新下载进度
                                     Platform.runLater(() -> progress.setProgress(progressNum));
 
