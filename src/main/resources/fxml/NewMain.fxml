@@ -45,6 +45,10 @@
                <font> <Font size="16"/> </font>
             </Label>
 
+            <Label fx:id="speed"  text="0/0" >
+               <font> <Font size="16"/> </font>
+            </Label>
+
             <Separator />
 
 
