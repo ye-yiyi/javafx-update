@@ -43,7 +43,7 @@ public class MainCtrl implements Initializable {
     public Pane rootPane;
 
 
-    public Label fileNum;
+    public Label fileNum,speed;
     public JFXProgressBar progress,progress2;
     public void initialize(URL location, ResourceBundle resources) {
         log.info("initialize: {}", location.getPath());
@@ -127,6 +127,9 @@ public class MainCtrl implements Initializable {
                                     float progressNum = ((float) count / length) ;//当前进度，用来更新progressBar的进度
 
                                     //可在此处增加页面下载进度显示
+                                    int finalCount = count;
+                                    Platform.runLater(() -> speed.setText(finalCount +"/"+length));
+
                                     // 通知主线程更新下载进度
                                     Platform.runLater(() -> progress.setProgress(progressNum));
 
