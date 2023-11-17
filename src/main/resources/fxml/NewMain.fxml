@@ -6,16 +6,20 @@
 
 
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.Font?>
+<?import com.jfoenix.controls.JFXTextArea?>
 
 
 <?import com.jfoenix.controls.JFXProgressBar?>
 <?import javafx.scene.control.Separator?>
+<?import com.jfoenix.controls.JFXSpinner?>
 <StackPane fx:id="rootPane" styleClass="green-theme"
-           fx:controller="com.yeyiyi.javafx_update.ctrl.MainCtrl"
+           fx:controller="com.yeyiyi.x5game_update.ctrl.MainCtrl"
            stylesheets="@../css/dark-theme.css"
            maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -45,9 +49,6 @@
                <font> <Font size="16"/> </font>
             </Label>
 
-            <Label fx:id="speed"  text="0/0" >
-               <font> <Font size="16"/> </font>
-            </Label>
 
             <Separator />
 
@@ -57,6 +58,11 @@
                </Text>
 
                <JFXProgressBar fx:id="progress2" styleClass="custom-jfx-progress-bar" progress="0" prefWidth="300"></JFXProgressBar>
+
+
+               <Label fx:id="speed"  text="0KB/0KB" >
+                  <font> <Font size="16"/> </font>
+               </Label>
 
 
 
