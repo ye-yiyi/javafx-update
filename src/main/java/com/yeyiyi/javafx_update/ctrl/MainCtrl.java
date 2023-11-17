@@ -117,6 +117,10 @@ public class MainCtrl implements Initializable {
                                 int length = connection.getContentLength();
 
                                 File libPath = new File(filePath);
+                                File parentDir = libPath.getParentFile();
+                                if (!parentDir.exists()) {
+                                    parentDir.mkdirs();
+                                }
                                 fos = new FileOutputStream(libPath);
 
                                 int count = 0;
@@ -126,6 +130,10 @@ public class MainCtrl implements Initializable {
                                     count += numread;
                                     float progressNum = ((float) count / length) ;//当前进度，用来更新progressBar的进度
 
+                                    String nowSize = bytesToKBString(count);
+                                    String sumSize = bytesToKBString(length);
+                                    Platform.runLater(() -> speed.setText(nowSize +"/"+sumSize));
+                                    
                                     //可在此处增加页面下载进度显示
                                     int finalCount = count;
                                     Platform.runLater(() -> speed.setText(finalCount +"/"+length));
@@ -199,6 +207,10 @@ public class MainCtrl implements Initializable {
                                 count += numread;
                                 float progressNum = ((float) count / length) ;//当前进度，用来更新progressBar的进度
 
+                                String nowSize = bytesToKBString(count);
+                                String sumSize = bytesToKBString(length);
+                                Platform.runLater(() -> speed.setText(nowSize +"/"+sumSize));
+                                
                                 // 通知主线程更新下载进度
                                 Platform.runLater(() -> progress2.setProgress(progressNum));
 
@@ -287,6 +299,18 @@ public class MainCtrl implements Initializable {
 
     }
 
+    public String bytesToKBString(long bytes){
+        DecimalFormat df = new DecimalFormat("#.00");
+        if (bytes < 1024 * 1024) {
+            double kilobytes = (double) bytes / 1024;
+            return df.format(kilobytes) +" KB";
+        } else {
+            double megabytes = (double) bytes / (1024 * 1024);
+            return df.format(megabytes) +" MB";
+        }
+
+    }
+    
     public void elseSet(){
         new DialogBuilder(fileNum)
                 .setTitle("提示")
