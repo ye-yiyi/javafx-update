@@ -57,6 +57,28 @@ public class MainCtrl implements Initializable {
                 try {
                     String url = "填写自己的后端接口URL";
                     String ret = HttpUtil.sendGet(url,10000);
+                    /** 返回报文示例：
+                        {
+                        	"exe": {
+                        		"fileDownloadUrl": "https://xiaoyuyu.games/test.exe",
+                        		"fileName": "test.exe",
+                        		"filePath": "test.exe"
+                        	},
+                        	"libList": [{
+                        		"fileDownloadUrl": "https://xiaoyuyu.games/lib/test1.jar",
+                        		"fileName": "test1.jar",
+                        		"filePath": "data/lib/ext/test1.jar"
+                        	}, {
+                        		"fileDownloadUrl": "https://xiaoyuyu.games/lib/test2.jar",
+                        		"fileName": "test2.jar",
+                        		"filePath": "data/lib/ext/test2jar"
+                        	}, {
+                        		"fileDownloadUrl": "https://xiaoyuyu.games/lib/test3.jar",
+                        		"fileName": "test3.jar",
+                        		"filePath": "data/lib/ext/test3.jar"
+                        	}]
+                        }
+                    **/
                     if(StringUtils.isNotBlank(ret)){
                         JSONObject data = new JSONObject(ret);
                         libList = data.getJSONArray("libList");
